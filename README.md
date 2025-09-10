@@ -1,11 +1,11 @@
-# Jorge Macias personal web pages
+# Jesus Justiniano personal web pages
 
 ### Hello World! 👋 :octocat:	
 > *Sad news, world never says hello back* <br/>
 > *People always say "hello world!" But never "how are you world?🌎"*
 
 I´m Ulmo! If u want to know more about me check below.  
-Visit [my online CV](https://ulmomacias.github.io).
+Visit [my online CV](https://jesus53787.github.io/MyPagina/).
 You can visit [my interactive bio](https://ulmomacias.github.io/Bio.html) to learn more about me
 
 
