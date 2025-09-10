@@ -2,53 +2,23 @@
 
 ### Hello World! 👋 :octocat:
 
-> _Sad news, world never says hello back_ <br/> > _People always say "hello world!" But never "how are you world?🌎"_
+Visita mi pagina [my online CV](https://jesus53787.github.io/MyPagina/).
 
-I´m Ulmo! If u want to know more about me check below.  
-Visit [my online CV](https://jesus53787.github.io/MyPagina/).
-You can visit [my interactive bio](https://ulmomacias.github.io/Bio.html) to learn more about me
+### Licencia
 
-🔭 I’m currently studying two BS: Computer Science, Data Science <br/>
-📫 How to reach me: You can reach me on [linkdIn](https://www.linkedin.com/in/ulmo-macias/), or email at jorgemacias(at)ciencias.unam.mx
-
-## Interactive Bio
-
-Done using [revealjs](https://revealjs.com)
-
-### Reveal.js
-
-reveal.js is an open source HTML presentation framework. It enables anyone with a web browser to create fully featured and beautiful presentations for free. [Check out the live demo](https://revealjs.com/).
-
-### Documentation
-
-The full reveal.js documentation is available at [revealjs.com](https://revealjs.com).
-
-### License
-
-MIT licensed
-
-Copyright (C) 2011-2020 Hakim [El Hattab](https://hakim.se)
+Copyright (C) 2025
 
 ## CV Template
 
-Free Bootstrap 4 Resume/CV Template for developers
-Theme name: Pillar
+Free Bootstrap 4
 
 Theme version: v1.0.1
 
-Release Date: 23 July 2018
+Date: 10 Septiembre 2025
 
-Author: Xiaoying Riley at 3rd Wave Media (http://themes.3rdwavemedia.com/)
+Author: Jesus Justiniano
 
-### Contact
+### Contacto
 
-Web: http://themes.3rdwavemedia.com/
-Email: themes@3rdwavemedia.com
-Twitter: @3rdwave_themes
-
-### License:
-
-This template is free under the Creative Commons Attribution 3.0 License.
-https://creativecommons.org/licenses/by/3.0/
-
-If you'd like to use the template without the attribution, you can buy the commercial license via our website: https://themes.3rdwavemedia.com/
+Web: https://jesus53787.github.io/MyPagina/
+Email: jesus.g.justiniano@gmail.com
