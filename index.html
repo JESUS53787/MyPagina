@@ -356,21 +356,31 @@
         function descargarPDF() {
             var elemento = document.getElementById('cv-para-descargar');
             
+            // TRUCO DEFINITIVO: Forzamos un ancho de pantalla grande (PC) directamente en el HTML
+            var anchoOriginal = elemento.style.width;
+            var maxAnchoOriginal = elemento.style.maxWidth;
+            
+            elemento.style.width = '1024px';
+            elemento.style.maxWidth = '1024px';
+
             var opciones = {
-                margin:       [0.3, 0, 0.3, 0], // Le da un pequeño margen arriba y abajo al PDF
+                margin:       [0.3, 0, 0.3, 0],
                 filename:     'CV_Jesus_Justiniano.pdf',
                 image:        { type: 'jpeg', quality: 0.98 },
                 html2canvas:  { 
                     scale: 2, 
-                    useCORS: true,
-                    windowWidth: 1200 // ¡EL TRUCO!: Fuerza a que se renderice en tamaño de computadora
+                    useCORS: true 
                 },
-                jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' },
-                pagebreak:    { mode: ['avoid-all', 'css', 'legacy'] } // Evita que corte los párrafos a la mitad
+                jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' }
             };
 
             // Ejecutamos la orden de descargar
-            html2pdf().set(opciones).from(elemento).save();
+            html2pdf().set(opciones).from(elemento).save().then(function() {
+                // Inmediatamente después de descargar, devolvemos el diseño a la normalidad
+                // para que tu página web no se quede deformada.
+                elemento.style.width = anchoOriginal;
+                elemento.style.maxWidth = maxAnchoOriginal;
+            });
         }
     </script>
 </body>
