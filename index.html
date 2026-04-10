@@ -354,16 +354,19 @@
 
     <script>
         function descargarPDF() {
-            // Seleccionamos la parte de la página que queremos convertir (tu CV)
             var elemento = document.getElementById('cv-para-descargar');
             
-            // Opciones para que el PDF salga con buena calidad
             var opciones = {
-                margin:       0,
+                margin:       [0.3, 0, 0.3, 0], // Le da un pequeño margen arriba y abajo al PDF
                 filename:     'CV_Jesus_Justiniano.pdf',
                 image:        { type: 'jpeg', quality: 0.98 },
-                html2canvas:  { scale: 2, useCORS: true },
-                jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
+                html2canvas:  { 
+                    scale: 2, 
+                    useCORS: true,
+                    windowWidth: 1200 // ¡EL TRUCO!: Fuerza a que se renderice en tamaño de computadora
+                },
+                jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' },
+                pagebreak:    { mode: ['avoid-all', 'css', 'legacy'] } // Evita que corte los párrafos a la mitad
             };
 
             // Ejecutamos la orden de descargar
