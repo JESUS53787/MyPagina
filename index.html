@@ -357,24 +357,39 @@
             var elemento = document.getElementById('cv-para-descargar');
 
             var opciones = {
-                margin:       0, // Sin márgenes para que la hoja ocupe el 100% del ancho
+                margin:       [0.4, 0, 0.4, 0], // Pequeño margen arriba y abajo, CERO a los lados
                 filename:     'CV_Jesus_Justiniano.pdf',
                 image:        { type: 'jpeg', quality: 1 },
                 html2canvas:  { 
                     scale: 2, 
                     useCORS: true,
-                    windowWidth: 1024, // Engaña a Bootstrap para que active el diseño de computadora
-                    // onclone modifica el archivo internamente justo antes de tomar la foto
+                    windowWidth: 1024, 
+                    scrollX: 0,
+                    scrollY: 0,
                     onclone: function (clonedDoc) {
+                        // 1. Seleccionamos el CV en la memoria
                         var clon = clonedDoc.getElementById('cv-para-descargar');
-                        // Le quitamos el centrado al clon para que se pegue a la izquierda y no se corte nada
-                        clon.classList.remove('mx-auto'); 
+                        clon.classList.remove('mx-auto', 'shadow-lg'); 
                         clon.style.width = '1024px';
                         clon.style.maxWidth = '1024px';
                         clon.style.margin = '0';
+
+                        // 2. EL SECRETO: Buscamos todas las "cajas padre" de la plantilla 
+                        // y les quitamos los candados de tamaño para que no corten tu CV.
+                        var cajasPadre = clonedDoc.querySelectorAll('.wrapper, .main-wrapper, .resume-wrapper');
+                        cajasPadre.forEach(function(caja) {
+                            caja.style.maxWidth = 'none';      // Quitamos el límite de ancho
+                            caja.style.width = '1024px';       // Lo igualamos al tamaño del CV
+                            caja.style.padding = '0';
+                            caja.style.margin = '0';
+                            caja.style.overflow = 'visible';   // Forzamos a que nada se oculte
+                        });
+                        
+                        // 3. Forzamos el fondo principal
+                        clonedDoc.body.style.width = '1024px';
                     }
                 },
-                jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' }
+                jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
             };
 
             // Ejecutamos la orden de descargar
