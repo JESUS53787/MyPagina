@@ -354,38 +354,50 @@
 
     <script>
         function descargarPDF() {
-            // 1. Ir arriba del todo
-            window.scrollTo(0, 0);
-            
-            var elemento = document.getElementById('cv-para-descargar');
-            
-            // 2. Guardamos tu diseño original
-            var clasesOriginales = elemento.className;
-            var cssOriginal = elemento.style.cssText;
-            
-            // 3. Quitamos el centrado (mx-auto) y fijamos el ancho. 
-            // Así la "cámara" toma la foto desde la esquina exacta sin desfasarse.
-            elemento.className = "resume-wrapper-inner bg-white text-left"; 
-            elemento.style.cssText = "width: 992px !important; max-width: 992px !important; margin: 0 !important;";
+            // 1. Creamos una "caja fantasma"
+            var cajaImpresion = document.createElement('div');
+            cajaImpresion.style.position = 'absolute';
+            cajaImpresion.style.top = '0';
+            cajaImpresion.style.left = '0';
+            cajaImpresion.style.width = '992px'; // Ancho estricto de PC
+            cajaImpresion.style.zIndex = '-1000'; // La ponemos al fondo para que no tape tu web
 
+            // 2. Clonamos tu CV original
+            var original = document.getElementById('cv-para-descargar');
+            var clon = original.cloneNode(true);
+
+            // 3. Preparamos el clon (le quitamos el centrado y la sombra para impresión limpia)
+            clon.style.margin = '0';
+            clon.style.width = '992px';
+            clon.style.maxWidth = '992px';
+            clon.classList.remove('mx-auto');
+            clon.classList.remove('shadow-lg');
+
+            // 4. Metemos el clon a la página (oculto en la caja fantasma)
+            cajaImpresion.appendChild(clon);
+            document.body.appendChild(cajaImpresion);
+
+            // 5. Configuramos la cámara para que capture ese clon
             var opciones = {
-                margin:       0, // ¡CERO MARGEN! Esto evita que se empuje hacia la derecha y se corte.
+                margin:       [0.3, 0, 0.3, 0], // Pequeño margen estético arriba y abajo
                 filename:     'CV_Jesus_Justiniano.pdf',
                 image:        { type: 'jpeg', quality: 1 },
                 html2canvas:  { 
                     scale: 2, 
                     useCORS: true,
                     windowWidth: 992,
-                    width: 992
+                    width: 992,
+                    x: 0, // Obliga a la cámara a iniciar en el píxel 0 (borde izquierdo exacto)
+                    y: 0,
+                    scrollY: 0
                 },
                 jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' }
             };
 
-            // 4. Generar y descargar
-            html2pdf().set(opciones).from(elemento).save().then(function() {
-                // 5. Devolver tu página web a la normalidad
-                elemento.className = clasesOriginales;
-                elemento.style.cssText = cssOriginal;
+            // 6. Tomamos la foto AL CLON
+            html2pdf().set(opciones).from(clon).save().then(function() {
+                // 7. Eliminamos la caja fantasma, como si nada hubiera pasado
+                document.body.removeChild(cajaImpresion);
             });
         }
     </script>
