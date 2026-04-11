@@ -387,7 +387,14 @@
                 
                 // Configuración del motor de salto de página
                 pagebreak: { 
-                    mode: ['css', 'legacy'] // Permite que el contenido pase a la siguiente página
+                    mode: ['css', 'legacy'], // Permite que el contenido pase a la siguiente página
+                    avoid: [
+                        '.resume-timeline-item', // Evita cortar los proyectos (columna izquierda)
+                        '.resume-skill-item',    // Evita cortar los bloques de habilidades (columna derecha)
+                        '.resume-section.education-section li', // Evita cortar cada item de educación
+                        '.resume-section.language-section li',  // Evita cortar los idiomas
+                        'h2', 'h3', 'h4'         // Evita dejar un título solo al final de la página
+                    ]
                 },
 
                 html2canvas: { 
