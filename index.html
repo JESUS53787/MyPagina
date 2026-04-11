@@ -360,8 +360,7 @@
                 
                 // Configuración del motor de salto de página
                 pagebreak: { 
-                    mode: ['css', 'legacy'], // Permite que el contenido pase a la siguiente página
-                    avoid: 'article, section, li' // Intenta no cortar elementos a la mitad
+                    mode: ['css', 'legacy'] // Permite que el contenido pase a la siguiente página
                 },
 
                 html2canvas: { 
@@ -370,7 +369,38 @@
                     scrollY: 0, // Reinicia el scroll interno para evitar zonas blancas
                     windowHeight: elemento.scrollHeight, // ¡Clave! Fuerza a leer todo el contenido oculto abajo
                     windowWidth: 1024, // Finge que la pantalla es de computadora
-                    width: 1024
+                    onclone: function (documentoClonado) {
+                        const contenedor = documentoClonado.getElementById('cv-para-descargar');
+                        
+                        // --- AQUÍ ESTÁ LA SOLUCIÓN AL ANCHO ---
+                        // Forzamos al contenedor a ocupar el 100% de la hoja y le quitamos el centrado (mx-auto)
+                        contenedor.style.width = '100%';
+                        contenedor.style.maxWidth = '100%';
+                        contenedor.style.margin = '0';
+                        contenedor.style.boxShadow = 'none'; // Evita manchas grises en los bordes
+                        // --------------------------------------
+
+                        // Mantener el formato de las columnas
+                        const filas = documentoClonado.querySelectorAll('.row');
+                        filas.forEach(fila => {
+                            fila.style.display = 'flex';
+                            fila.style.flexWrap = 'nowrap'; 
+                        });
+
+                        // Proporciones de las columnas ajustadas para que el texto respire mejor
+                        documentoClonado.querySelectorAll('.col-lg-9').forEach(el => { 
+                            el.style.flex = '0 0 72%'; el.style.maxWidth = '72%'; 
+                        });
+                        documentoClonado.querySelectorAll('.col-lg-3').forEach(el => { 
+                            el.style.flex = '0 0 28%'; el.style.maxWidth = '28%'; 
+                        });
+                        documentoClonado.querySelectorAll('.col-lg-7').forEach(el => { 
+                            el.style.flex = '0 0 60%'; el.style.maxWidth = '60%'; 
+                        });
+                        documentoClonado.querySelectorAll('.col-lg-4').forEach(el => { 
+                            el.style.flex = '0 0 40%'; el.style.maxWidth = '40%'; 
+                        });
+                    }
                 }, 
                 
                 jsPDF: { unit: 'mm', format: 'letter', orientation: 'portrait' } 
