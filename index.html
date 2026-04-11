@@ -354,42 +354,32 @@
 
     <script>
         function descargarPDF() {
-            // 1. Desplazamos la pantalla hasta arriba
-            window.scrollTo(0, 0);
-            
             var elemento = document.getElementById('cv-para-descargar');
             
-            // 2. Guardamos los estilos originales de toda la página
-            var bodyWidthOriginal = document.body.style.width;
-            var widthOriginal = elemento.style.width;
-            var maxWidthOriginal = elemento.style.maxWidth;
+            // TRUCO DEFINITIVO: Forzamos un ancho de pantalla grande (PC) directamente en el HTML
+            var anchoOriginal = elemento.style.width;
+            var maxAnchoOriginal = elemento.style.maxWidth;
             
-            // 3. TRUCO INFALIBLE: Expandimos físicamente la página completa
-            document.body.style.width = '1200px'; 
-            elemento.classList.remove('mx-auto');
-            elemento.style.width = '1000px';
-            elemento.style.maxWidth = '1000px';
+            elemento.style.width = '1024px';
+            elemento.style.maxWidth = '1024px';
 
             var opciones = {
-                margin:       0.3,
+                margin:       [0.3, 0, 0.3, 0],
                 filename:     'CV_Jesus_Justiniano.pdf',
-                image:        { type: 'jpeg', quality: 1 },
+                image:        { type: 'jpeg', quality: 0.98 },
                 html2canvas:  { 
                     scale: 2, 
-                    useCORS: true,
-                    windowWidth: 1200, // Hace que la cámara virtual sea ancha
-                    width: 1000 // Le dice a la cámara exactamente cuánto medir de izquierda a derecha
+                    useCORS: true 
                 },
                 jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' }
             };
 
-            // 4. Ejecutamos la orden de descargar
+            // Ejecutamos la orden de descargar
             html2pdf().set(opciones).from(elemento).save().then(function() {
-                // 5. Devolvemos el diseño a la normalidad instantáneamente
-                document.body.style.width = bodyWidthOriginal;
-                elemento.style.width = widthOriginal;
-                elemento.style.maxWidth = maxWidthOriginal;
-                elemento.classList.add('mx-auto');
+                // Inmediatamente después de descargar, devolvemos el diseño a la normalidad
+                // para que tu página web no se quede deformada.
+                elemento.style.width = anchoOriginal;
+                elemento.style.maxWidth = maxAnchoOriginal;
             });
         }
     </script>
