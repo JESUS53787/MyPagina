@@ -344,21 +344,28 @@
   </footer>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
-    <script> 
-        function descargarPDF() { 
-            var elemento = document.getElementById('cv-para-descargar'); 
-            var opciones = { 
-                margin: 10, 
-                filename: 'CV_Jesus_Justiniano.pdf', 
-                image: { type: 'jpeg', quality: 0.98 }, 
-                html2canvas: { 
-                    scale: 1.5, 
-                    useCORS: true 
-                }, 
-                jsPDF: { unit: 'mm', format: 'letter', orientation: 'portrait' } }; 
-                html2pdf().set(opciones).from(elemento).save(); 
-        } 
-    </script>
+<script> 
+    function descargarPDF() { 
+        // Seleccionamos el contenedor que tiene el fondo blanco y la sombra
+        const elemento = document.getElementById('cv-para-descargar'); 
+        
+        const opciones = { 
+            margin: [5, 5, 5, 5], // Margen en mm [superior, izquierdo, inferior, derecho]
+            filename: 'CV_Jesus_Justiniano.pdf', 
+            image: { type: 'jpeg', quality: 0.98 }, 
+            html2canvas: { 
+                scale: 2, // Aumenta la calidad y evita que salga vacío
+                useCORS: true, // Importante para cargar imágenes de otros dominios
+                letterRendering: true,
+                logging: false, // Cambia a true si necesitas ver errores en consola
+            }, 
+            jsPDF: { unit: 'mm', format: 'letter', orientation: 'portrait' } 
+        }; 
+
+        // Usamos el método con promesas para asegurar el renderizado
+        html2pdf().set(opciones).from(elemento).save(); 
+    } 
+</script>
 </body>
 
 </html>
