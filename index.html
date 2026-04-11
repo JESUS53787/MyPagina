@@ -357,35 +357,47 @@
             var elemento = document.getElementById('cv-para-descargar');
 
             var opciones = {
-                margin:       [0.2, 0, 0.2, 0], // Margen mínimo arriba y abajo, cero a los lados
+                margin:       [0.2, 0, 0.2, 0], // Margen arriba y abajo. Cero a los lados.
                 filename:     'CV_Jesus_Justiniano.pdf',
                 image:        { type: 'jpeg', quality: 1 },
                 html2canvas:  { 
                     scale: 2, 
                     useCORS: true,
-                    windowWidth: 1000, // Forzamos a que Bootstrap active las columnas de escritorio
+                    windowWidth: 1024, // Navegador en modo escritorio
+                    width: 1024,       // ¡CLAVE! Obliga a la cámara a no cortar a la derecha
+                    x: 0,
+                    y: 0,
+                    scrollY: 0,
                     onclone: function(clonedDoc) {
-                        // 1. Extraemos SOLO tu currículum de la memoria
-                        var cvClonado = clonedDoc.getElementById('cv-para-descargar');
+                        var cv = clonedDoc.getElementById('cv-para-descargar');
 
-                        // 2. Destruimos todo lo demás en la página clonada (fondos, cajas ocultas)
-                        // Esto evita que cualquier otra cosa aplaste o corte tu diseño.
-                        clonedDoc.body.innerHTML = '';
-                        clonedDoc.body.style.margin = '0';
-                        clonedDoc.body.style.padding = '0';
-                        
-                        // 3. Pegamos tu CV solo en la página en blanco
-                        clonedDoc.body.appendChild(cvClonado);
+                        // 1. Forzamos el ancho estricto a tu CV y quitamos centrado/sombra
+                        cv.classList.remove('mx-auto', 'shadow-lg');
+                        cv.style.width = '1024px';
+                        cv.style.minWidth = '1024px';
+                        cv.style.maxWidth = '1024px';
+                        cv.style.margin = '0';
 
-                        // 4. Lo fijamos con el tamaño exacto de tu monitor
-                        cvClonado.style.margin = '0';
-                        cvClonado.style.width = '1200px';
-                        cvClonado.style.maxWidth = '1200px';
-                        cvClonado.classList.remove('shadow-lg', 'mx-auto'); // Quitamos la sombra para impresión
+                        // 2. MANTENEMOS LOS PADRES VIVOS (Para no romper el CSS) 
+                        // pero los forzamos a 1024px para que no guillotinen el CV.
+                        var padres = clonedDoc.querySelectorAll('.wrapper, .main-wrapper, .resume-wrapper');
+                        padres.forEach(function(padre) {
+                            padre.style.width = '1024px';
+                            padre.style.minWidth = '1024px';
+                            padre.style.maxWidth = '1024px';
+                            padre.style.padding = '0';
+                            padre.style.margin = '0';
+                            padre.style.overflow = 'visible';
+                        });
 
-                        // 5. SOLUCIÓN DE LA FOTO: Le damos al clon la ruta oficial de tu GitHub
-                        // para que el navegador no bloquee la imagen por seguridad.
-                        var foto = cvClonado.querySelector('img');
+                        // 3. Forzamos la base de la página para evitar que Bootstrap la aplaste
+                        clonedDoc.body.style.width = '1024px';
+                        clonedDoc.body.style.minWidth = '1024px';
+                        clonedDoc.documentElement.style.width = '1024px';
+                        clonedDoc.documentElement.style.minWidth = '1024px';
+
+                        // 4. SOLUCIÓN DE LA FOTO (Cargada desde tu GitHub)
+                        var foto = cv.querySelector('img.picture');
                         if(foto) {
                             foto.src = 'https://jesus53787.github.io/MyPagina/assets/images/profile.jpg';
                             foto.crossOrigin = 'anonymous';
