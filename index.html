@@ -350,15 +350,11 @@
         function descargarPDF() { 
             var elemento = document.getElementById('cv-para-descargar'); 
 
-            // TRUCO: Quitamos la sombra temporalmente porque a veces 
-            // html2canvas se confunde con sombras muy grandes y corta mal.
-            elemento.classList.remove('shadow-lg');
-
             var opciones = { 
                 // Ponemos márgenes a 0 para que la imagen aproveche todo el ancho
-                margin: 0, 
+                margin: [3,3,3,3], 
                 filename: 'CV_Jesus_Justiniano.pdf', 
-                image: { type: 'jpeg', quality: 0.98 }, 
+                image: { type: 'jpeg', quality: 1 }, 
                 html2canvas: { 
                     scale: 2, 
                     useCORS: true
@@ -373,9 +369,7 @@
             }; 
             
             // Generamos el PDF y cuando termine, le volvemos a poner la sombra
-            html2pdf().set(opciones).from(elemento).save().then(function() {
-                elemento.classList.add('shadow-lg');
-            }); 
+            html2pdf().set(opciones).from(elemento).save().then(); 
         }
     </script>
 </body>
