@@ -344,28 +344,35 @@
   </footer>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
-<script> 
-    function descargarPDF() { 
-        // Seleccionamos el contenedor que tiene el fondo blanco y la sombra
-        const elemento = document.getElementById('cv-para-descargar'); 
-        
-        const opciones = { 
-            margin: [5, 5, 5, 5], // Margen en mm [superior, izquierdo, inferior, derecho]
-            filename: 'CV_Jesus_Justiniano.pdf', 
-            image: { type: 'jpeg', quality: 0.98 }, 
-            html2canvas: { 
-                scale: 2, // Aumenta la calidad y evita que salga vacío
-                useCORS: true, // Importante para cargar imágenes de otros dominios
-                letterRendering: true,
-                logging: false, // Cambia a true si necesitas ver errores en consola
-            }, 
-            jsPDF: { unit: 'mm', format: 'letter', orientation: 'portrait' } 
-        }; 
+    <script> 
+        function descargarPDF() { 
+            const elemento = document.getElementById('cv-para-descargar'); 
+            
+            const opciones = { 
+                margin: [10, 10, 10, 10], // [Superior, Izquierdo, Inferior, Derecho] en milímetros
+                filename: 'CV_Jesus_Justiniano.pdf', 
+                image: { type: 'jpeg', quality: 1.0 }, // Calidad máxima para el texto
+                
+                // Configuración del motor de salto de página
+                pagebreak: { 
+                    mode: ['css', 'legacy'], // Permite que el contenido pase a la siguiente página
+                    avoid: 'article, section, li' // Intenta no cortar elementos a la mitad
+                },
 
-        // Usamos el método con promesas para asegurar el renderizado
-        html2pdf().set(opciones).from(elemento).save(); 
-    } 
-</script>
+                html2canvas: { 
+                    scale: 2, 
+                    useCORS: true, 
+                    scrollY: 0, // Reinicia el scroll interno para evitar zonas blancas
+                    windowHeight: elemento.scrollHeight // ¡Clave! Fuerza a leer todo el contenido oculto abajo
+                }, 
+                
+                jsPDF: { unit: 'mm', format: 'letter', orientation: 'portrait' } 
+            }; 
+
+            // Generar y guardar
+            html2pdf().set(opciones).from(elemento).save(); 
+        } 
+    </script>
 </body>
 
 </html>
