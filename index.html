@@ -23,13 +23,6 @@
 
     <!-- Theme CSS -->
     <link id="theme-style" rel="stylesheet" href="assets/css/styles.css">
-    <style>
-        /* Evita que el texto y las letras se corten por la mitad en el PDF */
-        p, li, h1, h2, h3, h4, h5, h6 {
-            break-inside: avoid;
-            page-break-inside: avoid;
-        }
-    </style>
 
 </head>
 
@@ -363,7 +356,7 @@
                 // Configuración del motor de salto de página
                 pagebreak: { 
                     mode: ['css', 'legacy'], // Permite que el contenido pase a la siguiente página
-                    avoid: ['p', 'li', 'h3']
+                    avoid: 'article, section, li' // Intenta no cortar elementos a la mitad
                 },
 
                 html2canvas: { 
