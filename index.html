@@ -354,43 +354,38 @@
 
     <script>
         function descargarPDF() {
-            // 1. Ir arriba del todo para evitar hojas en blanco
+            // 1. Ir arriba del todo
             window.scrollTo(0, 0);
             
             var elemento = document.getElementById('cv-para-descargar');
             
-            // 2. Guardar las clases y estilos originales para no arruinar tu web
+            // 2. Guardamos tu diseño original
             var clasesOriginales = elemento.className;
-            var widthOriginal = elemento.style.width;
-            var maxWidthOriginal = elemento.style.maxWidth;
+            var cssOriginal = elemento.style.cssText;
             
-            // 3. LA SOLUCIÓN: Le quitamos temporalmente el "mx-auto" (centrado) 
-            // y lo pegamos a la izquierda con tamaño estricto de PC.
-            elemento.className = "resume-wrapper-inner text-left bg-white shadow-lg"; 
-            elemento.style.width = '992px';
-            elemento.style.maxWidth = '992px';
+            // 3. Quitamos el centrado (mx-auto) y fijamos el ancho. 
+            // Así la "cámara" toma la foto desde la esquina exacta sin desfasarse.
+            elemento.className = "resume-wrapper-inner bg-white text-left"; 
+            elemento.style.cssText = "width: 992px !important; max-width: 992px !important; margin: 0 !important;";
 
             var opciones = {
-                margin:       0.3,
+                margin:       0, // ¡CERO MARGEN! Esto evita que se empuje hacia la derecha y se corte.
                 filename:     'CV_Jesus_Justiniano.pdf',
                 image:        { type: 'jpeg', quality: 1 },
                 html2canvas:  { 
                     scale: 2, 
                     useCORS: true,
-                    windowWidth: 992, // Ancho de la ventana virtual
-                    width: 992,       // Ancho exacto de la cámara
-                    scrollX: 0,
-                    scrollY: 0
+                    windowWidth: 992,
+                    width: 992
                 },
                 jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' }
             };
 
-            // 4. Generar la orden de descarga
+            // 4. Generar y descargar
             html2pdf().set(opciones).from(elemento).save().then(function() {
-                // 5. Devolver todo a la normalidad al instante
+                // 5. Devolver tu página web a la normalidad
                 elemento.className = clasesOriginales;
-                elemento.style.width = widthOriginal;
-                elemento.style.maxWidth = maxWidthOriginal;
+                elemento.style.cssText = cssOriginal;
             });
         }
     </script>
