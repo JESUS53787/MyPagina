@@ -344,27 +344,40 @@
   </footer>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
     <script> 
         function descargarPDF() { 
             var elemento = document.getElementById('cv-para-descargar'); 
 
+            // TRUCO: Quitamos la sombra temporalmente porque a veces 
+            // html2canvas se confunde con sombras muy grandes y corta mal.
+            elemento.classList.remove('shadow-lg');
+
             var opciones = { 
-                margin: [10, 3, 10, 3], // arriba, izquierda, abajo, derecha (mm)
+                // Ponemos márgenes a 0 para que la imagen aproveche todo el ancho
+                margin: 0, 
                 filename: 'CV_Jesus_Justiniano.pdf', 
                 image: { type: 'jpeg', quality: 0.98 }, 
                 html2canvas: { 
                     scale: 2, 
-                    useCORS: true 
+                    useCORS: true, 
+                    scrollY: 0,        // MUY IMPORTANTE: Captura desde el inicio real
+                    windowWidth: 1200  // MUY IMPORTANTE: Fuerza a Bootstrap a renderizar 2 columnas
                 }, 
                 jsPDF: { 
                     unit: 'mm', 
                     format: 'letter', 
                     orientation: 'portrait' 
-                },
-                pagebreak: { mode: ['css', 'legacy'] }
+                }
+                // NOTA: Hemos ELIMINADO la propiedad "pagebreak" a propósito. 
+                // Así cortará la imagen fluidamente sin dejar huecos en blanco gigantes.
             }; 
             
-            html2pdf().set(opciones).from(elemento).save(); 
+            // Generamos el PDF y cuando termine, le volvemos a poner la sombra
+            html2pdf().set(opciones).from(elemento).save().then(function() {
+                elemento.classList.add('shadow-lg');
+            }); 
         }
     </script>
 </body>
