@@ -355,32 +355,48 @@
     <script>
         function descargarPDF() {
             var elemento = document.getElementById('cv-para-descargar');
-            
-            // TRUCO DEFINITIVO: Forzamos un ancho de pantalla grande (PC) directamente en el HTML
-            var anchoOriginal = elemento.style.width;
-            var maxAnchoOriginal = elemento.style.maxWidth;
-            
-            elemento.style.width = '1024px';
-            elemento.style.maxWidth = '1024px';
 
             var opciones = {
-                margin:       [0.3, 0, 0.3, 0.4],
+                margin:       [0.2, 0, 0.2, 0], // Margen mínimo arriba y abajo, cero a los lados
                 filename:     'CV_Jesus_Justiniano.pdf',
-                image:        { type: 'jpeg', quality: 0.98 },
+                image:        { type: 'jpeg', quality: 1 },
                 html2canvas:  { 
                     scale: 2, 
-                    useCORS: true 
+                    useCORS: true,
+                    windowWidth: 1000, // Forzamos a que Bootstrap active las columnas de escritorio
+                    onclone: function(clonedDoc) {
+                        // 1. Extraemos SOLO tu currículum de la memoria
+                        var cvClonado = clonedDoc.getElementById('cv-para-descargar');
+
+                        // 2. Destruimos todo lo demás en la página clonada (fondos, cajas ocultas)
+                        // Esto evita que cualquier otra cosa aplaste o corte tu diseño.
+                        clonedDoc.body.innerHTML = '';
+                        clonedDoc.body.style.margin = '0';
+                        clonedDoc.body.style.padding = '0';
+                        
+                        // 3. Pegamos tu CV solo en la página en blanco
+                        clonedDoc.body.appendChild(cvClonado);
+
+                        // 4. Lo fijamos con el tamaño exacto de tu monitor
+                        cvClonado.style.margin = '0';
+                        cvClonado.style.width = '1000px';
+                        cvClonado.style.maxWidth = '1000px';
+                        cvClonado.classList.remove('shadow-lg', 'mx-auto'); // Quitamos la sombra para impresión
+
+                        // 5. SOLUCIÓN DE LA FOTO: Le damos al clon la ruta oficial de tu GitHub
+                        // para que el navegador no bloquee la imagen por seguridad.
+                        var foto = cvClonado.querySelector('img');
+                        if(foto) {
+                            foto.src = 'https://jesus53787.github.io/MyPagina/assets/images/profile.jpg';
+                            foto.crossOrigin = 'anonymous';
+                        }
+                    }
                 },
-                jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' }
+                jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
             };
 
             // Ejecutamos la orden de descargar
-            html2pdf().set(opciones).from(elemento).save().then(function() {
-                // Inmediatamente después de descargar, devolvemos el diseño a la normalidad
-                // para que tu página web no se quede deformada.
-                elemento.style.width = anchoOriginal;
-                elemento.style.maxWidth = maxAnchoOriginal;
-            });
+            html2pdf().set(opciones).from(elemento).save();
         }
     </script>
 </body>
