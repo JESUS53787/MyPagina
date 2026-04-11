@@ -357,11 +357,11 @@
             var elemento = document.getElementById('cv-para-descargar');
 
             var opciones = {
-                margin: 0.10,
+                margin: [10, 3, 10, 3],
                 filename: 'CV_Jesus_Justiniano.pdf',
                 image: { type: 'jpeg', quality: 1 },
                 html2canvas: { 
-                    scale: 1.5,
+                    scale: 2.0,
                     useCORS: true
                 },
                 jsPDF: { unit: 'mm', format: 'letter', orientation: 'portrait' }
