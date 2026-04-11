@@ -349,14 +349,13 @@
             const elemento = document.getElementById('cv-para-descargar'); 
             
             const opciones = { 
-                margin: [25, 25, 25, 25], // [Superior, Izquierdo, Inferior, Derecho] en milímetros
+                margin: [10, 10, 10, 10], // [Superior, Izquierdo, Inferior, Derecho] en milímetros
                 filename: 'CV_Jesus_Justiniano.pdf', 
                 image: { type: 'jpeg', quality: 1.0 }, // Calidad máxima para el texto
                 
                 // Configuración del motor de salto de página
                 pagebreak: { 
-                    mode: ['css', 'legacy'], // Permite que el contenido pase a la siguiente página
-                    avoid: 'article, section, li' // Intenta no cortar elementos a la mitad
+                    mode: ['css', 'legacy'] // Permite que el contenido pase a la siguiente página
                 },
 
                 html2canvas: { 
