@@ -357,55 +357,49 @@
             var elemento = document.getElementById('cv-para-descargar');
 
             var opciones = {
-                margin:       [0.2, 0, 0.2, 0], // Márgenes: Arriba, Derecha(0), Abajo, Izquierda(0)
+                margin:       [0.3, 0.3, 0.3, 0.3], 
                 filename:     'CV_Jesus_Justiniano.pdf',
                 image:        { type: 'jpeg', quality: 1 },
                 html2canvas:  { 
                     scale: 2, 
                     useCORS: true,
-                    windowWidth: 1024, 
-                    width: 1024, // Obliga a la cámara a capturar los 1024px completos
-                    scrollY: 0,
-                    scrollX: 0,
+                    windowWidth: 1200, // Simula una pantalla gigante
                     onclone: function(clonedDoc) {
+                        // 1. Seleccionamos el CV en la memoria
                         var cv = clonedDoc.getElementById('cv-para-descargar');
+                        
+                        // 2. HACK DE COLUMNAS: Buscamos todas las clases 'col-lg-' 
+                        // y las convertimos en 'col-' para que NUNCA se apilen.
+                        const columnas = clonedDoc.querySelectorAll('[class*="col-lg-"]');
+                        columnas.forEach(col => {
+                            col.className = col.className.replace(/col-lg-/g, 'col-');
+                        });
 
-                        // 1. Limpiamos tu CV y le forzamos el tamaño de PC
-                        cv.classList.remove('mx-auto', 'shadow-lg');
-                        cv.style.setProperty('width', '1024px', 'important');
-                        cv.style.setProperty('max-width', '1024px', 'important');
-                        cv.style.setProperty('margin', '0', 'important');
-                        cv.style.setProperty('overflow', 'visible', 'important');
-
-                        // 2. EL TRUCO SUPREMO: Recorremos TODOS los padres hacia arriba
-                        // y les obligamos a ser visibles y del mismo tamaño, sin cortar nada.
-                        var nodoActual = cv.parentNode;
-                        while (nodoActual && nodoActual.tagName !== 'BODY' && nodoActual.tagName !== 'HTML') {
-                            nodoActual.style.setProperty('overflow', 'visible', 'important');
-                            nodoActual.style.setProperty('width', '1024px', 'important');
-                            nodoActual.style.setProperty('max-width', 'none', 'important');
-                            nodoActual.style.setProperty('padding', '0', 'important');
-                            nodoActual.style.setProperty('margin', '0', 'important');
-                            nodoActual = nodoActual.parentNode;
+                        // 3. HACK DE CABECERA: Forzamos que la foto y el nombre estén lado a lado
+                        const headerMedia = clonedDoc.querySelector('.media');
+                        if(headerMedia) {
+                            headerMedia.style.display = 'flex';
+                            headerMedia.style.flexDirection = 'row';
+                            headerMedia.style.alignItems = 'center';
                         }
 
-                        // 3. Expandimos la base misma de la página
-                        clonedDoc.body.style.setProperty('width', '1024px', 'important');
-                        clonedDoc.body.style.setProperty('overflow', 'visible', 'important');
-                        clonedDoc.documentElement.style.setProperty('width', '1024px', 'important');
-
-                        // 4. La foto de tu perfil (ruta absoluta para que no falle)
-                        var foto = cv.querySelector('img.picture');
+                        // 4. FIX DE LA FOTO: Ruta absoluta de GitHub
+                        var foto = clonedDoc.querySelector('img.picture');
                         if(foto) {
                             foto.src = 'https://jesus53787.github.io/MyPagina/assets/images/profile.jpg';
                             foto.crossOrigin = 'anonymous';
+                            foto.style.width = '150px'; // Tamaño fijo para que no se pierda
                         }
+
+                        // 5. AJUSTE DE ANCHO PARA A4: 850px es el ancho perfecto
+                        cv.style.width = '850px';
+                        cv.style.maxWidth = '850px';
+                        cv.classList.remove('mx-auto', 'shadow-lg');
                     }
                 },
                 jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
             };
 
-            // Ejecutamos la orden de descargar
             html2pdf().set(opciones).from(elemento).save();
         }
     </script>
