@@ -372,12 +372,12 @@
                     onclone: function (documentoClonado) {
                         const contenedor = documentoClonado.getElementById('cv-para-descargar');
                         
-                        // --- AQUÍ ESTÁ LA SOLUCIÓN AL ANCHO ---
-                        // Forzamos al contenedor a ocupar el 100% de la hoja y le quitamos el centrado (mx-auto)
-                        contenedor.style.width = '100%';
-                        contenedor.style.maxWidth = '100%';
+                        // --- SOLUCIÓN: MEDIDA EXACTA EN PÍXELES ---
+                        // En lugar de '100%', obligamos a que el ancho sea el de una hoja de papel real.
+                        contenedor.style.width = '900px';
+                        contenedor.style.maxWidth = '900px';
                         contenedor.style.margin = '0';
-                        contenedor.style.boxShadow = 'none'; // Evita manchas grises en los bordes
+                        contenedor.style.boxShadow = 'none'; 
                         // --------------------------------------
 
                         // Mantener el formato de las columnas
@@ -387,7 +387,7 @@
                             fila.style.flexWrap = 'nowrap'; 
                         });
 
-                        // Proporciones de las columnas ajustadas para que el texto respire mejor
+                        // Proporciones de las columnas ajustadas
                         documentoClonado.querySelectorAll('.col-lg-9').forEach(el => { 
                             el.style.flex = '0 0 72%'; el.style.maxWidth = '72%'; 
                         });
