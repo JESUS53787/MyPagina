@@ -24,33 +24,6 @@
     <!-- Theme CSS -->
     <link id="theme-style" rel="stylesheet" href="assets/css/styles.css">
 
-    <style>
-    /* Evita que los proyectos o trabajos se corten a la mitad */
-    .resume-timeline-item {
-        page-break-inside: avoid;
-        break-inside: avoid;
-    }
-
-    /* Evita que los bloques de habilidades se corten */
-    .resume-skill-item {
-        page-break-inside: avoid;
-        break-inside: avoid;
-    }
-
-    /* Evita que los items de educación y certificados se corten */
-    .education-section li,
-    .reference-section li {
-        page-break-inside: avoid;
-        break-inside: avoid;
-    }
-
-    /* Opcional: Evita que los títulos se queden solos al final de una página */
-    h2, h3, h4 {
-        page-break-after: avoid;
-        break-after: avoid;
-    }
-</style>
-
 </head>
 
 <body>
@@ -388,13 +361,7 @@
                 // Configuración del motor de salto de página
                 pagebreak: { 
                     mode: ['css', 'legacy'], // Permite que el contenido pase a la siguiente página
-                    avoid: [
-                        '.resume-timeline-item', // Evita cortar los proyectos (columna izquierda)
-                        '.resume-skill-item',    // Evita cortar los bloques de habilidades (columna derecha)
-                        '.resume-section.education-section li', // Evita cortar cada item de educación
-                        '.resume-section.language-section li',  // Evita cortar los idiomas
-                        'h2', 'h3', 'h4'         // Evita dejar un título solo al final de la página
-                    ]
+                    avoid: ['p', 'li', 'h2', 'h3', 'h4', '.resume-position-time']
                 },
 
                 html2canvas: { 
