@@ -354,32 +354,39 @@
 
     <script>
         function descargarPDF() {
+            // Desplazamos la pantalla hasta arriba para evitar la hoja en blanco
+            window.scrollTo(0, 0);
+            
             var elemento = document.getElementById('cv-para-descargar');
             
-            // TRUCO DEFINITIVO: Forzamos un ancho de pantalla grande (PC) directamente en el HTML
-            var anchoOriginal = elemento.style.width;
-            var maxAnchoOriginal = elemento.style.maxWidth;
+            // Guardamos los estilos originales
+            var widthOriginal = elemento.style.width;
+            var maxWidthOriginal = elemento.style.maxWidth;
             
-            elemento.style.width = '1024px';
-            elemento.style.maxWidth = '1024px';
+            // TRUCO: Le quitamos el centrado temporalmente y le damos ancho de escritorio
+            elemento.classList.remove('mx-auto');
+            elemento.style.width = '992px'; // Tamaño exacto para que Bootstrap active las dos columnas
+            elemento.style.maxWidth = '992px';
 
             var opciones = {
-                margin:       [0.3, 0, 0.3, 0],
+                margin:       0.3, // Margen uniforme para que encaje perfecto en el A4
                 filename:     'CV_Jesus_Justiniano.pdf',
                 image:        { type: 'jpeg', quality: 0.98 },
                 html2canvas:  { 
                     scale: 2, 
-                    useCORS: true 
+                    useCORS: true,
+                    scrollY: 0, // Fuerza a que la captura empiece desde el píxel 0 (arriba)
+                    scrollX: 0
                 },
                 jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' }
             };
 
-            // Ejecutamos la orden de descargar
+            // Generamos el PDF
             html2pdf().set(opciones).from(elemento).save().then(function() {
-                // Inmediatamente después de descargar, devolvemos el diseño a la normalidad
-                // para que tu página web no se quede deformada.
-                elemento.style.width = anchoOriginal;
-                elemento.style.maxWidth = maxAnchoOriginal;
+                // Inmediatamente devolvemos el diseño a la normalidad en la web
+                elemento.classList.add('mx-auto');
+                elemento.style.width = widthOriginal;
+                elemento.style.maxWidth = maxWidthOriginal;
             });
         }
     </script>
