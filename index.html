@@ -349,28 +349,16 @@
     <script> 
         function descargarPDF() { 
             var elemento = document.getElementById('cv-para-descargar'); 
-
             var opciones = { 
-                // Ponemos márgenes a 0 para que la imagen aproveche todo el ancho
-                margin: [3,3,3,3], 
-                filename: 'CV_Jesus_Justiniano.pdf', 
-                image: { type: 'jpeg', quality: 1 }, 
+                margin: 0.3, filename: 'CV_Jesus_Justiniano.pdf', 
+                image: { type: 'jpeg', quality: 0.98 }, 
                 html2canvas: { 
-                    scale: 2, 
-                    useCORS: true
+                    scale: 2.5, 
+                    useCORS: true 
                 }, 
-                jsPDF: { 
-                    unit: 'mm', 
-                    format: 'letter', 
-                    orientation: 'portrait' 
-                }
-                // NOTA: Hemos ELIMINADO la propiedad "pagebreak" a propósito. 
-                // Así cortará la imagen fluidamente sin dejar huecos en blanco gigantes.
-            }; 
-            
-            // Generamos el PDF y cuando termine, le volvemos a poner la sombra
-            html2pdf().set(opciones).from(elemento).save().then(); 
-        }
+                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' } }; 
+                html2pdf().set(opciones).from(elemento).save(); 
+        } 
     </script>
 </body>
 
