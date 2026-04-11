@@ -354,46 +354,43 @@
 
     <script>
         function descargarPDF() {
+            // 1. Desplazamos la pantalla hasta arriba
+            window.scrollTo(0, 0);
+            
             var elemento = document.getElementById('cv-para-descargar');
+            
+            // 2. Guardamos los estilos originales de toda la página
+            var bodyWidthOriginal = document.body.style.width;
+            var widthOriginal = elemento.style.width;
+            var maxWidthOriginal = elemento.style.maxWidth;
+            
+            // 3. TRUCO INFALIBLE: Expandimos físicamente la página completa
+            document.body.style.width = '1200px'; 
+            elemento.classList.remove('mx-auto');
+            elemento.style.width = '1000px';
+            elemento.style.maxWidth = '1000px';
 
             var opciones = {
-                margin:       [0.4, 0, 0.4, 0], // Pequeño margen arriba y abajo, CERO a los lados
+                margin:       0.3,
                 filename:     'CV_Jesus_Justiniano.pdf',
                 image:        { type: 'jpeg', quality: 1 },
                 html2canvas:  { 
                     scale: 2, 
                     useCORS: true,
-                    windowWidth: 1024, 
-                    scrollX: 0,
-                    scrollY: 0,
-                    onclone: function (clonedDoc) {
-                        // 1. Seleccionamos el CV en la memoria
-                        var clon = clonedDoc.getElementById('cv-para-descargar');
-                        clon.classList.remove('mx-auto', 'shadow-lg'); 
-                        clon.style.width = '1024px';
-                        clon.style.maxWidth = '1024px';
-                        clon.style.margin = '0';
-
-                        // 2. EL SECRETO: Buscamos todas las "cajas padre" de la plantilla 
-                        // y les quitamos los candados de tamaño para que no corten tu CV.
-                        var cajasPadre = clonedDoc.querySelectorAll('.wrapper, .main-wrapper, .resume-wrapper');
-                        cajasPadre.forEach(function(caja) {
-                            caja.style.maxWidth = 'none';      // Quitamos el límite de ancho
-                            caja.style.width = '1024px';       // Lo igualamos al tamaño del CV
-                            caja.style.padding = '0';
-                            caja.style.margin = '0';
-                            caja.style.overflow = 'visible';   // Forzamos a que nada se oculte
-                        });
-                        
-                        // 3. Forzamos el fondo principal
-                        clonedDoc.body.style.width = '1024px';
-                    }
+                    windowWidth: 1200, // Hace que la cámara virtual sea ancha
+                    width: 1000 // Le dice a la cámara exactamente cuánto medir de izquierda a derecha
                 },
-                jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
+                jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' }
             };
 
-            // Ejecutamos la orden de descargar
-            html2pdf().set(opciones).from(elemento).save();
+            // 4. Ejecutamos la orden de descargar
+            html2pdf().set(opciones).from(elemento).save().then(function() {
+                // 5. Devolvemos el diseño a la normalidad instantáneamente
+                document.body.style.width = bodyWidthOriginal;
+                elemento.style.width = widthOriginal;
+                elemento.style.maxWidth = maxWidthOriginal;
+                elemento.classList.add('mx-auto');
+            });
         }
     </script>
 </body>
