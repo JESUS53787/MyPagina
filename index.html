@@ -357,61 +357,57 @@
             var elemento = document.getElementById('cv-para-descargar');
 
             var opciones = {
-                margin:        [0.3, 0.2, 0.3, 0.2],  // márgenes simétricos (arriba, derecha, abajo, izquierda) en pulgadas
-                filename:      'CV_Jesus_Justiniano.pdf',
-                image:         { type: 'jpeg', quality: 0.98 },
-                html2canvas:   { 
-                    scale:       2.5,                 // mayor nitidez
-                    useCORS:     true,
-                    logging:     false,
-                    windowWidth: 1200,                // ancho amplio para asegurar que quepa todo
+                margin:       [0.2, 0, 0.2, 0], // Margen arriba y abajo. Cero a los lados.
+                filename:     'CV_Jesus_Justiniano.pdf',
+                image:        { type: 'jpeg', quality: 1 },
+                html2canvas:  { 
+                    scale: 2, 
+                    useCORS: true,
+                    windowWidth: 1024, // Navegador en modo escritorio
+                    width: 1024,       // ¡CLAVE! Obliga a la cámara a no cortar a la derecha
+                    x: 0,
+                    y: 0,
+                    scrollY: 0,
                     onclone: function(clonedDoc) {
                         var cv = clonedDoc.getElementById('cv-para-descargar');
-                        
-                        // Eliminar sombras y márgenes que puedan empujar el contenido fuera
-                        cv.style.boxShadow = 'none';
-                        cv.style.margin = '0 auto';
-                        cv.style.padding = '20px';     // un poco de aire interior
-                        cv.style.width = '100%';
-                        cv.style.maxWidth = '1100px';
-                        cv.style.overflow = 'visible';
-                        
-                        // Asegurar que todos los padres permitan contenido completo
-                        var parent = cv.parentNode;
-                        while (parent && parent !== clonedDoc.body) {
-                            parent.style.overflow = 'visible';
-                            parent.style.width = '100%';
-                            parent.style.maxWidth = '100%';
-                            parent.style.padding = '0';
-                            parent.style.margin = '0';
-                            parent = parent.parentNode;
-                        }
-                        
-                        // Forzar que el body ocupe todo el ancho
-                        clonedDoc.body.style.overflow = 'visible';
-                        clonedDoc.body.style.width = '100%';
-                        clonedDoc.body.style.margin = '0';
-                        clonedDoc.body.style.padding = '0';
-                        
-                        // Reemplazar la ruta de la foto por una URL absoluta (para evitar errores CORS)
+
+                        // 1. Forzamos el ancho estricto a tu CV y quitamos centrado/sombra
+                        cv.classList.remove('mx-auto', 'shadow-lg');
+                        cv.style.width = '1024px';
+                        cv.style.minWidth = '1024px';
+                        cv.style.maxWidth = '1024px';
+                        cv.style.margin = '0';
+
+                        // 2. MANTENEMOS LOS PADRES VIVOS (Para no romper el CSS) 
+                        // pero los forzamos a 1024px para que no guillotinen el CV.
+                        var padres = clonedDoc.querySelectorAll('.wrapper, .main-wrapper, .resume-wrapper');
+                        padres.forEach(function(padre) {
+                            padre.style.width = '1024px';
+                            padre.style.minWidth = '1024px';
+                            padre.style.maxWidth = '1024px';
+                            padre.style.padding = '0';
+                            padre.style.margin = '0';
+                            padre.style.overflow = 'visible';
+                        });
+
+                        // 3. Forzamos la base de la página para evitar que Bootstrap la aplaste
+                        clonedDoc.body.style.width = '1024px';
+                        clonedDoc.body.style.minWidth = '1024px';
+                        clonedDoc.documentElement.style.width = '1024px';
+                        clonedDoc.documentElement.style.minWidth = '1024px';
+
+                        // 4. SOLUCIÓN DE LA FOTO (Cargada desde tu GitHub)
                         var foto = cv.querySelector('img.picture');
-                        if (foto) {
-                            // Si la imagen está alojada en tu GitHub Pages, usa la URL completa
+                        if(foto) {
                             foto.src = 'https://jesus53787.github.io/MyPagina/assets/images/profile.jpg';
                             foto.crossOrigin = 'anonymous';
-                            // Forzar que la imagen se cargue antes de renderizar
-                            foto.style.maxWidth = '100%';
-                            foto.style.height = 'auto';
                         }
                     }
                 },
-                jsPDF: { 
-                    unit: 'in', 
-                    format: 'a4', 
-                    orientation: 'portrait' 
-                }
+                jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
             };
 
+            // Ejecutamos la orden de descargar
             html2pdf().set(opciones).from(elemento).save();
         }
     </script>
