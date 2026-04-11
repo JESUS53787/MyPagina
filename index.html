@@ -354,39 +354,42 @@
 
     <script>
         function descargarPDF() {
-            // Desplazamos la pantalla hasta arriba para evitar la hoja en blanco
+            // 1. Desplazamos la pantalla hasta arriba
             window.scrollTo(0, 0);
             
             var elemento = document.getElementById('cv-para-descargar');
             
-            // Guardamos los estilos originales
+            // 2. Guardamos los estilos originales de toda la página
+            var bodyWidthOriginal = document.body.style.width;
             var widthOriginal = elemento.style.width;
             var maxWidthOriginal = elemento.style.maxWidth;
             
-            // TRUCO: Le quitamos el centrado temporalmente y le damos ancho de escritorio
+            // 3. TRUCO INFALIBLE: Expandimos físicamente la página completa
+            document.body.style.width = '1200px'; 
             elemento.classList.remove('mx-auto');
-            elemento.style.width = '992px'; // Tamaño exacto para que Bootstrap active las dos columnas
-            elemento.style.maxWidth = '992px';
+            elemento.style.width = '1000px';
+            elemento.style.maxWidth = '1000px';
 
             var opciones = {
-                margin:       0.3, // Margen uniforme para que encaje perfecto en el A4
+                margin:       0.3,
                 filename:     'CV_Jesus_Justiniano.pdf',
-                image:        { type: 'jpeg', quality: 0.98 },
+                image:        { type: 'jpeg', quality: 1 },
                 html2canvas:  { 
                     scale: 2, 
                     useCORS: true,
-                    scrollY: 0, // Fuerza a que la captura empiece desde el píxel 0 (arriba)
-                    scrollX: 0
+                    windowWidth: 1200, // Hace que la cámara virtual sea ancha
+                    width: 1000 // Le dice a la cámara exactamente cuánto medir de izquierda a derecha
                 },
                 jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' }
             };
 
-            // Generamos el PDF
+            // 4. Ejecutamos la orden de descargar
             html2pdf().set(opciones).from(elemento).save().then(function() {
-                // Inmediatamente devolvemos el diseño a la normalidad en la web
-                elemento.classList.add('mx-auto');
+                // 5. Devolvemos el diseño a la normalidad instantáneamente
+                document.body.style.width = bodyWidthOriginal;
                 elemento.style.width = widthOriginal;
                 elemento.style.maxWidth = maxWidthOriginal;
+                elemento.classList.add('mx-auto');
             });
         }
     </script>
