@@ -354,51 +354,31 @@
 
     <script>
         function descargarPDF() {
-            // 1. Creamos una "caja fantasma"
-            var cajaImpresion = document.createElement('div');
-            cajaImpresion.style.position = 'absolute';
-            cajaImpresion.style.top = '0';
-            cajaImpresion.style.left = '0';
-            cajaImpresion.style.width = '992px'; // Ancho estricto de PC
-            cajaImpresion.style.zIndex = '-1000'; // La ponemos al fondo para que no tape tu web
+            var elemento = document.getElementById('cv-para-descargar');
 
-            // 2. Clonamos tu CV original
-            var original = document.getElementById('cv-para-descargar');
-            var clon = original.cloneNode(true);
-
-            // 3. Preparamos el clon (le quitamos el centrado y la sombra para impresión limpia)
-            clon.style.margin = '0';
-            clon.style.width = '992px';
-            clon.style.maxWidth = '992px';
-            clon.classList.remove('mx-auto');
-            clon.classList.remove('shadow-lg');
-
-            // 4. Metemos el clon a la página (oculto en la caja fantasma)
-            cajaImpresion.appendChild(clon);
-            document.body.appendChild(cajaImpresion);
-
-            // 5. Configuramos la cámara para que capture ese clon
             var opciones = {
-                margin:       [0.3, 0, 0.3, 0], // Pequeño margen estético arriba y abajo
+                margin:       0, // Sin márgenes para que la hoja ocupe el 100% del ancho
                 filename:     'CV_Jesus_Justiniano.pdf',
                 image:        { type: 'jpeg', quality: 1 },
                 html2canvas:  { 
                     scale: 2, 
                     useCORS: true,
-                    windowWidth: 992,
-                    width: 992,
-                    x: 0, // Obliga a la cámara a iniciar en el píxel 0 (borde izquierdo exacto)
-                    y: 0,
-                    scrollY: 0
+                    windowWidth: 1024, // Engaña a Bootstrap para que active el diseño de computadora
+                    // onclone modifica el archivo internamente justo antes de tomar la foto
+                    onclone: function (clonedDoc) {
+                        var clon = clonedDoc.getElementById('cv-para-descargar');
+                        // Le quitamos el centrado al clon para que se pegue a la izquierda y no se corte nada
+                        clon.classList.remove('mx-auto'); 
+                        clon.style.width = '1024px';
+                        clon.style.maxWidth = '1024px';
+                        clon.style.margin = '0';
+                    }
                 },
                 jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' }
             };
 
-            // 6. Tomamos la foto AL CLON
-            html2pdf().set(opciones).from(clon).save().then(function() {
-                // 7. Eliminamos la caja fantasma, como si nada hubiera pasado
-                document.body.removeChild(cajaImpresion);
-            });
+            // Ejecutamos la orden de descargar
+            html2pdf().set(opciones).from(elemento).save();
         }
     </script>
 </body>
