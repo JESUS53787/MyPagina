@@ -357,47 +357,59 @@
             var elemento = document.getElementById('cv-para-descargar');
 
             var opciones = {
-                margin:       [0.3, 0.3, 0.3, 0.3], 
-                filename:     'CV_Jesus_Justiniano.pdf',
-                image:        { type: 'jpeg', quality: 1 },
-                html2canvas:  { 
-                    scale: 2, 
-                    useCORS: true,
-                    windowWidth: 1200, // Simula una pantalla gigante
+                margin:        [0.3, 0.2, 0.3, 0.2],  // márgenes simétricos (arriba, derecha, abajo, izquierda) en pulgadas
+                filename:      'CV_Jesus_Justiniano.pdf',
+                image:         { type: 'jpeg', quality: 0.98 },
+                html2canvas:   { 
+                    scale:       2.5,                 // mayor nitidez
+                    useCORS:     true,
+                    logging:     false,
+                    windowWidth: 1200,                // ancho amplio para asegurar que quepa todo
                     onclone: function(clonedDoc) {
-                        // 1. Seleccionamos el CV en la memoria
                         var cv = clonedDoc.getElementById('cv-para-descargar');
                         
-                        // 2. HACK DE COLUMNAS: Buscamos todas las clases 'col-lg-' 
-                        // y las convertimos en 'col-' para que NUNCA se apilen.
-                        const columnas = clonedDoc.querySelectorAll('[class*="col-lg-"]');
-                        columnas.forEach(col => {
-                            col.className = col.className.replace(/col-lg-/g, 'col-');
-                        });
-
-                        // 3. HACK DE CABECERA: Forzamos que la foto y el nombre estén lado a lado
-                        const headerMedia = clonedDoc.querySelector('.media');
-                        if(headerMedia) {
-                            headerMedia.style.display = 'flex';
-                            headerMedia.style.flexDirection = 'row';
-                            headerMedia.style.alignItems = 'center';
+                        // Eliminar sombras y márgenes que puedan empujar el contenido fuera
+                        cv.style.boxShadow = 'none';
+                        cv.style.margin = '0 auto';
+                        cv.style.padding = '20px';     // un poco de aire interior
+                        cv.style.width = '100%';
+                        cv.style.maxWidth = '1100px';
+                        cv.style.overflow = 'visible';
+                        
+                        // Asegurar que todos los padres permitan contenido completo
+                        var parent = cv.parentNode;
+                        while (parent && parent !== clonedDoc.body) {
+                            parent.style.overflow = 'visible';
+                            parent.style.width = '100%';
+                            parent.style.maxWidth = '100%';
+                            parent.style.padding = '0';
+                            parent.style.margin = '0';
+                            parent = parent.parentNode;
                         }
-
-                        // 4. FIX DE LA FOTO: Ruta absoluta de GitHub
-                        var foto = clonedDoc.querySelector('img.picture');
-                        if(foto) {
+                        
+                        // Forzar que el body ocupe todo el ancho
+                        clonedDoc.body.style.overflow = 'visible';
+                        clonedDoc.body.style.width = '100%';
+                        clonedDoc.body.style.margin = '0';
+                        clonedDoc.body.style.padding = '0';
+                        
+                        // Reemplazar la ruta de la foto por una URL absoluta (para evitar errores CORS)
+                        var foto = cv.querySelector('img.picture');
+                        if (foto) {
+                            // Si la imagen está alojada en tu GitHub Pages, usa la URL completa
                             foto.src = 'https://jesus53787.github.io/MyPagina/assets/images/profile.jpg';
                             foto.crossOrigin = 'anonymous';
-                            foto.style.width = '150px'; // Tamaño fijo para que no se pierda
+                            // Forzar que la imagen se cargue antes de renderizar
+                            foto.style.maxWidth = '100%';
+                            foto.style.height = 'auto';
                         }
-
-                        // 5. AJUSTE DE ANCHO PARA A4: 850px es el ancho perfecto
-                        cv.style.width = '850px';
-                        cv.style.maxWidth = '850px';
-                        cv.classList.remove('mx-auto', 'shadow-lg');
                     }
                 },
-                jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
+                jsPDF: { 
+                    unit: 'in', 
+                    format: 'a4', 
+                    orientation: 'portrait' 
+                }
             };
 
             html2pdf().set(opciones).from(elemento).save();
