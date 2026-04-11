@@ -354,21 +354,21 @@
 
     <script>
         function descargarPDF() {
-            // 1. Desplazamos la pantalla hasta arriba
+            // 1. Ir arriba del todo para evitar hojas en blanco
             window.scrollTo(0, 0);
             
             var elemento = document.getElementById('cv-para-descargar');
             
-            // 2. Guardamos los estilos originales de toda la página
-            var bodyWidthOriginal = document.body.style.width;
+            // 2. Guardar las clases y estilos originales para no arruinar tu web
+            var clasesOriginales = elemento.className;
             var widthOriginal = elemento.style.width;
             var maxWidthOriginal = elemento.style.maxWidth;
             
-            // 3. TRUCO INFALIBLE: Expandimos físicamente la página completa
-            document.body.style.width = '1200px'; 
-            elemento.classList.remove('mx-auto');
-            elemento.style.width = '1000px';
-            elemento.style.maxWidth = '1000px';
+            // 3. LA SOLUCIÓN: Le quitamos temporalmente el "mx-auto" (centrado) 
+            // y lo pegamos a la izquierda con tamaño estricto de PC.
+            elemento.className = "resume-wrapper-inner text-left bg-white shadow-lg"; 
+            elemento.style.width = '992px';
+            elemento.style.maxWidth = '992px';
 
             var opciones = {
                 margin:       0.3,
@@ -377,19 +377,20 @@
                 html2canvas:  { 
                     scale: 2, 
                     useCORS: true,
-                    windowWidth: 1200, // Hace que la cámara virtual sea ancha
-                    width: 1000 // Le dice a la cámara exactamente cuánto medir de izquierda a derecha
+                    windowWidth: 992, // Ancho de la ventana virtual
+                    width: 992,       // Ancho exacto de la cámara
+                    scrollX: 0,
+                    scrollY: 0
                 },
                 jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' }
             };
 
-            // 4. Ejecutamos la orden de descargar
+            // 4. Generar la orden de descarga
             html2pdf().set(opciones).from(elemento).save().then(function() {
-                // 5. Devolvemos el diseño a la normalidad instantáneamente
-                document.body.style.width = bodyWidthOriginal;
+                // 5. Devolver todo a la normalidad al instante
+                elemento.className = clasesOriginales;
                 elemento.style.width = widthOriginal;
                 elemento.style.maxWidth = maxWidthOriginal;
-                elemento.classList.add('mx-auto');
             });
         }
     </script>
