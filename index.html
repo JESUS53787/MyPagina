@@ -367,40 +367,7 @@
                     scale: 2, 
                     useCORS: true, 
                     scrollY: 0, // Reinicia el scroll interno para evitar zonas blancas
-                    windowHeight: elemento.scrollHeight, // ¡Clave! Fuerza a leer todo el contenido oculto abajo
-                    windowWidth: 1024, // Finge que la pantalla es de computadora
-                    onclone: function (documentoClonado) {
-                        const contenedor = documentoClonado.getElementById('cv-para-descargar');
-                        
-                        // --- SOLUCIÓN: MEDIDA EXACTA EN PÍXELES ---
-                        // En lugar de '100%', obligamos a que el ancho sea el de una hoja de papel real.
-                        contenedor.style.width = '900px';
-                        contenedor.style.maxWidth = '900px';
-                        contenedor.style.margin = '0';
-                        contenedor.style.boxShadow = 'none'; 
-                        // --------------------------------------
-
-                        // Mantener el formato de las columnas
-                        const filas = documentoClonado.querySelectorAll('.row');
-                        filas.forEach(fila => {
-                            fila.style.display = 'flex';
-                            fila.style.flexWrap = 'nowrap'; 
-                        });
-
-                        // Proporciones de las columnas ajustadas
-                        documentoClonado.querySelectorAll('.col-lg-9').forEach(el => { 
-                            el.style.flex = '0 0 72%'; el.style.maxWidth = '72%'; 
-                        });
-                        documentoClonado.querySelectorAll('.col-lg-3').forEach(el => { 
-                            el.style.flex = '0 0 28%'; el.style.maxWidth = '28%'; 
-                        });
-                        documentoClonado.querySelectorAll('.col-lg-7').forEach(el => { 
-                            el.style.flex = '0 0 60%'; el.style.maxWidth = '60%'; 
-                        });
-                        documentoClonado.querySelectorAll('.col-lg-4').forEach(el => { 
-                            el.style.flex = '0 0 40%'; el.style.maxWidth = '40%'; 
-                        });
-                    }
+                    windowHeight: elemento.scrollHeight // ¡Clave! Fuerza a leer todo el contenido oculto abajo
                 }, 
                 
                 jsPDF: { unit: 'mm', format: 'letter', orientation: 'portrait' } 
